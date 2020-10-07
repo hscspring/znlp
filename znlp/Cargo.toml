@@ -1,0 +1,32 @@
+[package]
+name = "znlp"
+version = "0.1.0"
+authors = ["Yam <haoshaochun@gmail.com>"]
+edition = "2018"
+categories = ["nlp"]
+description = "The NLP Toolkit."
+keywords = ["NLP", "tokenizer", "segmenation", "pos", "keyword"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/hscspring/znlp"
+exclude = [ "rust-toolchain", "target/*", "Cargo.lock", "benches/*.txt", "benches/*.json"  ]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[lib]
+name = "znlp"
+path = "src/lib.rs"
+crate-type = ["lib"]
+
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+doc = false
+
+
+
+[dependencies]
+
+
