@@ -2,10 +2,6 @@
 //!
 //! # Quick Start
 
-
-
-
 pub mod algorithm;
-pub mod tokenizer;
 pub mod data;
-
+pub mod tokenizer;

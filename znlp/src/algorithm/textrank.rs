@@ -1,10 +1,12 @@
+use crate::graph::Graph;
 
-#[derive(Hash, Eq, PartialEq, Debug)]
-struct TokenItem {
-  word: String,
-  pos: String
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+struct TokenItem<'a> {
+    word: &'a str,
+    pos: &'a str,
 }
 
-struct TextRank {
-  tokens: TokenItem
+#[derive(Debug)]
+struct TextRank<'a> {
+    tokens: TokenItem<'a>,
 }

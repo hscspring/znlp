@@ -2,47 +2,52 @@ use core::cmp::max;
 use std::collections::HashMap;
 use std::vec::Vec;
 
-#[derive(Hash, Eq, PartialEq, Debug, Copy, Clone)]
-struct Entry<'a> {
-    start: &'a str,
-    end: &'a str,
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+struct Entry {
+    start: String,
+    end: String,
     weight: i32,
 }
 
-impl<'a> Entry<'_> {
-    pub fn new(start: &'a str, end: &'a str, weight: i32) -> Entry<'a> {
-        Entry { start, end, weight }
+impl Entry {
+    pub fn new(start: &str, end: &str, weight: i32) -> Entry {
+        Entry {
+            start: start.to_owned(),
+            end: end.to_owned(),
+            weight: weight,
+        }
     }
 }
 
 #[derive(Debug)]
-struct UndirectWeightedGraph<'a> {
+struct UndirectWeightedGraph {
     d: f32,
-    graph: HashMap<String, Vec<Entry<'a>>>,
+    graph: HashMap<String, Vec<Entry>>,
 }
 
-impl<'a> UndirectWeightedGraph<'a> {
-    pub fn new(d: f32) -> UndirectWeightedGraph<'a> {
+impl UndirectWeightedGraph {
+    pub fn new(d: f32) -> UndirectWeightedGraph {
         UndirectWeightedGraph {
             d: d,
             graph: HashMap::new(),
         }
     }
-    pub fn add_edge(mut self, entry: Entry<'a>) -> UndirectWeightedGraph<'a> {
-        match self.graph.get_mut(entry.start) {
+    pub fn add_edge(mut self, entry: Entry) -> UndirectWeightedGraph {
+        match self.graph.get_mut(&entry.start) {
             Some(vec) => {
                 vec.push(entry.clone());
             }
             None => {
-                self.graph.insert(entry.start.to_string(), [entry].to_vec());
+                self.graph
+                    .insert(entry.start.clone(), [entry.clone()].to_vec());
             }
         };
-        match self.graph.get_mut(entry.end) {
+        match self.graph.get_mut(&entry.end) {
             Some(vec) => {
                 vec.push(entry);
             }
             None => {
-                self.graph.insert(entry.end.to_string(), [entry].to_vec());
+                self.graph.insert(entry.end.clone(), [entry].to_vec());
             }
         }
         self
@@ -75,8 +80,7 @@ impl<'a> UndirectWeightedGraph<'a> {
                 let mut s: f32 = 0.0;
                 let entries: &Vec<Entry> = self.graph.get(n.to_owned()).unwrap();
                 for e in entries.iter() {
-                    s += e.weight as f32 / out_sum.get(&e.end.to_string()).unwrap()
-                        * ws.get(&e.end.to_string()).unwrap();
+                    s += e.weight as f32 / out_sum.get(&e.end).unwrap() * ws.get(&e.end).unwrap();
                     if let Some(val) = ws.get_mut(n.to_owned()) {
                         *val = (1.0 - self.d) + self.d * s;
                     }
@@ -93,7 +97,7 @@ impl<'a> UndirectWeightedGraph<'a> {
     }
 }
 
-impl Default for UndirectWeightedGraph<'_> {
+impl Default for UndirectWeightedGraph {
     fn default() -> Self {
         UndirectWeightedGraph::new(0.85)
     }
@@ -106,7 +110,7 @@ mod tests {
     #[test]
     fn create_entry() {
         let entry = Entry::new("我", "喜欢", 3);
-        assert_eq!(entry.start, "我");
+        assert_eq!(entry.start, String::from("我"));
         assert_eq!(entry.weight, 3);
     }
 
